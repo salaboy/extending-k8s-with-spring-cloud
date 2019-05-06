@@ -1,0 +1,10 @@
+apiVersion: "beta.jbcnconf.salaboy.com/v1"
+kind: AService
+metadata:
+  name: service-a
+  labels: 
+     app: my-app
+spec:
+  serviceName: "service-a"
+  serviceVersion: "1.0"
+  
