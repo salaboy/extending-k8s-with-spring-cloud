@@ -1,0 +1,10 @@
+apiVersion: "beta.k8s.salaboy.org/v1"
+kind: ServiceB
+metadata:
+  name: my-service-b
+  labels: 
+     app: my-app
+spec:
+  serviceName: "my-service-b"
+  serviceVersion: "1.0"
+  

@@ -10,6 +10,16 @@ We will use the following repositories to build our services and our Kubernetes 
 - [Example Service B](https://github.com/salaboy/example-service-b)
 - [Example Function A](https://github.com/salaboy/example-function-a)
 
+It is recommended to clone all these repos under the same directory, as the following instructions are based in that assumption:
+```
+mkdir extending-k8s
+cd extending-k8s
+git clone https://github.com/salaboy/extending-kubernetes-with-spring-cloud
+git clone https://github.com/salaboy/k8s-operator
+git clone https://github.com/salaboy/example-service-a
+git clone https://github.com/salaboy/example-service-b
+git clone https://github.com/salaboy/example-function-a
+```
 
 ## Infrastructure
 
@@ -23,6 +33,8 @@ In this section we will perform the next steps:
 1) Create a Cluster
 2) Install Istio in the istio-system namespace
 3) Install KNative (Service, Build, Eventing)
+
+#### Creating the Cluster
 
 I've created a 3 nodes cluster with a **n1-standard-2**  (2CPUs - 7.5GB RAM)setup for each node. I've selected Kubernetes version **1.12.6**  for the following installation. (Notice that with an older version, the one for default doesn't work)
 
@@ -83,15 +95,23 @@ kubectl -n knative-eventing get pods -w
 
 With the infrastructure ready to go, we now can create our Kubernetes Deployments, Create our Functions and our Routing Policies with Istio.
 
+Finally, instead of using Ingresses we will use an Istio Gateway to route traffic that is coming from outside the cluster to our services. 
+For that in this repository we have the Gateway definition, so we can deploy it by running:
 
+```
+cd extending-kubernetes-with-spring-cloud/
+kubectl apply -f istio-gateway.yaml
+```
 
 
 ## Workshop
 Steps Draft
 - Deploy Service A
   - See how the service A returns the default answer if B is not present
+  - Expose Service A with an Istio Virtual Service + Istio Gateway
 - Deploy Service B
   - See how A start consuming B
+  - Expose Service A with an Istio Virtual Service + Istio Gateway
 - Deploy Function A
   - See how Service A consume Function A
 - Deploy Gateway (Explain why you might want to do that)
@@ -107,12 +127,57 @@ Steps Draft
   - Show custom routes creator
 
 ### Deploying a Service A
+You can clone [Example Service A](https://github.com/salaboy/example-service-a)
 
+This project contains the source code for a very simple service that do the following:
+- Every 5 seconds: call Service B
+- Every 5 seconds: call Function A
+
+It will print the output of each call or a message saying that the function or service were not available and 
+it should return a default answer.
+
+To deploy we need to:
+Build the project with maven:
+```
+mvn clean install
+```
+Create a docker image with:
+```
+docker build -t salaboy/example-service-a:0.0.1 .
+```
+
+Then push the image to docker hub:
+```
+docker push salaboy/example-service-a:0.0.1
+```
+Finally deploy to our kubernetes cluster with:
+```
+cd kubernetes/
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+
+Now in order to access our Example Service A service, we need to expose it to clients that are external to the Cluster. 
+We can do this with Native Ingress resources or by using the Istio Gateway that is available to us. 
+
+In order to expose our Service using Istio Virtual Services we should run:
+```
+kubectl apply -f istio-virtual-service.yaml
+
+```
+This will create a new Route to access service a at http <EXTERNAL IP>/service-a/ 
+
+
+To deploy example service B follow the same instructions. 
 
 ### Creating and Deploying a Function with KNative Serving
-You can clone - [Example Function A](https://github.com/salaboy/example-function-a)
+You can clone [Example Function A](https://github.com/salaboy/example-function-a)
 
-Build the project with mvn clean install
+Build the project with 
+```
+
+mvn clean install
+```
 Create a Docker image for it with
 ```
 docker build -t salaboy/example-function-a:0.0.1 .
@@ -138,6 +203,123 @@ http <EXTERNAL IP> 'Host:example-function-a.default.example.com'
 ```
 
 You should see the function returning a value. 
+
+
+### Deploying our K8s Operator for Service A, B and Function A
+
+Build the project with 
+```
+cd k8s-operator/
+mvn clean install
+```
+Create a Docker image for it with
+```
+docker build -t salaboy/k8s-operator:0.0.1 .
+```
+Then push the docker image to be available in hub.docker.com
+```
+docker push salaboy/k8s-operator:0.0.1
+```
+
+Because we are creating an Operator that is going to access the Kubernetes APIs from inside the cluster (as a Pod) we need to create 3 important resources: Role, RoleBinding and ServiceAccount. 
+
+Then inside the kubernetes/ 
+
+``
+kubectl apply -f cluster-role.yaml
+kubectl apply -f cluster-role-binding.yaml 
+kubeclt apply -f service-account.yaml
+``
+
+Once we have these resources configured, we can deploy our Operator, you can check that inside the deployment descriptor this Deployment is using the ServiceAccount that we have just created. 
+
+**Note**: notice that I've created a Cluster wide Role and Role Binding, both extremely permissive. You might want to check the official documentation to configure these resources to be as restrictive as possible for your Operator to work. [ServiceAccounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/), [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) 
+
+
+In order to deploy our K8s Operator we need to we can run:
+```
+kubectl apply -f deployment.yaml
+```
+
+If you take a look at the logs of the K8s Operator you will see that the pod is running, but it lacks the right resources to operate:
+```
+kubectl logs -f k8s-operator-<POD name> k8s-operator
+
+// you should see something like:
+> Custom CRDs required to work not found please check your installation!
+```
+
+This means that we need to provide the Operator the Custom Resource Definitions we need to deploy these resources to make them available to our Cluster. In the crds/ directory we will find two things:
+1) Custom Resource Definitions
+2) Custom Resource (instance) 
+
+We will first deploy the Custom Resource Definition
+
+```
+cd extending-kubernetes-with-spring-cloud/crds/
+kubectl apply -f service-a-crd-definition.yaml
+```
+
+This means that now we can do:
+```
+kubectl get service-a
+```
+Now we should get 
+```
+No resources found.
+```
+
+Due we haven't created any instance of this new resource type. 
+
+Let's add the Application CRD now:
+```
+kubectl apply -f app-crd-definition.yaml
+```
+
+we should be able to test it with:
+
+```
+kubectl get apps
+```
+
+Once again, no resources found is ok.
+
+For the Operator to work, we need to create instance of these resources. We have a couple of instance definitions ready in the same directory, so let's do:
+
+```
+kubectl apply -f service-a.yaml
+```
+This create a new instance of our Custom Resource Definition ServiceA.
+
+Now the following command should return a resource instance:
+```
+kubectl get a
+```
+Should return:
+```
+NAME        AGE
+service-a   37s
+```
+
+Let's do the same with an Application resource:
+```
+k apply -f app.yaml
+```
+
+Now doing: 
+```
+kubectl get apps
+```
+should return:
+```
+NAME     AGE
+my-app   47s
+```
+
+
+@TODO: when we deploy a new service A we can create a new virtual service to expose on the Istio Gateway.
+
+
 
 # Conclusions
 

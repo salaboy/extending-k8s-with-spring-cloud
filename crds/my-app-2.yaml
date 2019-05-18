@@ -1,0 +1,7 @@
+apiVersion: "beta.k8s.salaboy.org/v1"
+kind: Application
+metadata:
+  name: my-app-2
+spec:
+  version: "0.1"
+  selector: "my-app-2"

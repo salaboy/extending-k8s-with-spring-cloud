@@ -1,4 +1,4 @@
-apiVersion: "beta.jbcnconf.salaboy.com/v1"
+apiVersion: "beta.k8s.salaboy.org/v1"
 kind: Application
 metadata:
   name: my-app
