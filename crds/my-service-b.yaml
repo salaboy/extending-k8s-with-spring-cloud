@@ -1,7 +1,7 @@
 apiVersion: "beta.k8s.salaboy.org/v1"
 kind: ServiceB
 metadata:
-  name: my-service-b
+  name: my-b
   labels: 
      app: my-app
 spec:

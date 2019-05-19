@@ -1,7 +1,9 @@
 # Extending Kubernetes with Spring Cloud
 This repository serves as an index for a workshop like set of excersices about creating our custom resource definitions for Kubernetes using Spring Cloud components. 
 
-During these excersices, you will learn about how to create your custom extensions, deploy them and use them as part of a Kubernetes Operator that will understand the domain specific restrictions that needs to be applied to the infrastructure. 
+During these excersices, you will learn about how to create your custom extensions, deploy them and use them as part of a Kubernetes Operator that will understand the domain specific restrictions that needs to be applied to the infrastructure.
+At the end you can find also some useful links to other related projects. 
+
 
 ## Repositories
 We will use the following repositories to build our services and our Kubernetes Operator:
@@ -319,6 +321,7 @@ my-app   47s
 
 @TODO: when we deploy a new service A we can create a new virtual service to expose on the Istio Gateway.
 
+# Links
 
 
 # Conclusions

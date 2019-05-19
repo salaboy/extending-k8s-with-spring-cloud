@@ -1,9 +1,9 @@
 apiVersion: "beta.k8s.salaboy.org/v1"
 kind: ServiceA
 metadata:
-  name: my-service-a2
+  name: my-a2
   labels: 
-     app: my-app-2
+     app: my-app2
 spec:
   serviceName: "my-service-a2"
   serviceVersion: "1.0"
