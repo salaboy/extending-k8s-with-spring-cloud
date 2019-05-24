@@ -5,6 +5,7 @@ In this section we will perform the next steps:
 1) Create a Cluster
 2) Install Istio in the istio-system namespace
 3) Install KNative (Service, Build, Eventing)
+4) Create an Istio gateway to route inbound traffic (from outside the cluster to our services)
 
 #### Creating the Cluster
 

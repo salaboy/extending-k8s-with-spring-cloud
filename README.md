@@ -30,13 +30,13 @@ For this tutorial we use Kubernetes, Istio and KNative to demonstrate what can b
 ### Installation
 For setting up the cluster in [GKE you can follow this guide](install.md)
 
-Remember that you can always find the external IP of your Gateway by running:
+**NOTE**: Remember that you can always find the external IP of your Gateway by running:
 ```
 kubectl get svc istio-ingressgateway -n istio-system
 ```
 
 ## Workshop
-Steps Draft
+**Steps Draft**
 - Deploy Service A
   - See how the service A returns the default answer if B is not present
   - Expose Service A with an Istio Virtual Service + Istio Gateway
@@ -57,15 +57,24 @@ Steps Draft
   - show code that watch resources changes 
   - Show custom routes creator
 
+## Checkpoint #0: Services A, B and Function A
+
+## Checkpoint #1: Controller v1 (Gateway/Routes)
+
+## Checkpoint #2: Controller v2 (Notify if Service B is missing)
+
+## Checkpoint #3: Operator v1 (CRDs and App)
+
+## Checkpoint #4: Operator v2 (+Checking K8s Services)
+
 ### Deploying a Service A
 You can clone [Example Service A](https://github.com/salaboy/example-service-a)
 
 This project contains the source code for a very simple service that do the following:
-- Every 5 seconds: call Service B
-- Every 5 seconds: call Function A
+- Every 10 seconds: call Service B (initial delay 5 seconds)
+- Every 10 seconds: call Function A
 
-It will print the output of each call or a message saying that the function or service were not available and 
-it should return a default answer.
+It will print the output of each call or a message saying that the function or service were not available and it should return a default answer.
 
 To deploy we need to:
 Build the project with maven:
@@ -77,7 +86,7 @@ Create a docker image with:
 docker build -t salaboy/example-service-a:0.0.1 .
 ```
 
-Then push the image to docker hub:
+Then push the image to docker hub (you need to replace to your user):
 ```
 docker push salaboy/example-service-a:0.0.1
 ```
@@ -87,6 +96,13 @@ cd kubernetes/
 kubectl apply -f deployment.yaml
 kubectl apply -f service.yaml
 ```
+You can take a look at the logs by doing:
+
+```
+kubectl logs -f my-service-a-<pod-hash> my-service-a
+```
+
+You can find the pod name by calling ```kubectl get pods```
 
 Now in order to access our Example Service A service, we need to expose it to clients that are external to the Cluster. 
 We can do this with Native Ingress resources or by using the Istio Gateway that is available to us. 
@@ -96,10 +112,11 @@ In order to expose our Service using Istio Virtual Services we should run:
 kubectl apply -f istio-virtual-service.yaml
 
 ```
-This will create a new Route to access service a at http <EXTERNAL IP>/service-a/ 
+This will create a new Route to access service a at http <EXTERNAL IP>/my-service-a/ 
 
+### Deploying a Service B
 
-To deploy example service B follow the same instructions. 
+To deploy example service B follow the same instructions as Service A.
 
 ### Creating and Deploying a Function with KNative Serving
 You can clone [Example Function A](https://github.com/salaboy/example-function-a)
@@ -135,6 +152,14 @@ http <EXTERNAL IP> 'Host:example-function-a.default.example.com'
 
 You should see the function returning a value. 
 
+Notice that you can customize how the autoscaler scale down your function pods with: 
+```
+kubectl edit cm config-autoscaler -n knative-serving
+```
+and changing the default 30s value to:
+```
+scale-to-zero-grace-period: "10s"
+```
 
 ### Deploying our K8s Operator for Service A, B and Function A
 

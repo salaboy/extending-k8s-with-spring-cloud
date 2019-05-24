@@ -14,4 +14,12 @@ spec:
     kind: Application 
     shortNames:
     - apps
-  
+  additionalPrinterColumns:
+    - name: STATUS
+      type: string
+      description: The Status of the App
+      JSONPath: .spec.status
+    - name: URL
+      type: string
+      description: The URL of the App
+      JSONPath: .spec.url    
