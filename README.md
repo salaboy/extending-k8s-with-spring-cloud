@@ -57,15 +57,15 @@ This workshop follows the next checkpoints:
 
 ![Checkpoint #0](imgs/workshop-2.png "Checkpoint #0")
 
+Now that we have our k8s services up and running we can expose them using Istio Gateway to access them from outside the cluster
 
-- Expose Service A with an Istio Virtual Service + Istio Gateway
-- Expose Service B with an Istio Virtual Service + Istio Gateway
+- [Expose Service A with an Istio Virtual Service + Istio Gateway](#exposing-service-a)
+- [Expose Service B with an Istio Virtual Service + Istio Gateway](#exposing-service-b)
 
 ## Checkpoint #1: Controller v1 (Gateway/Routes)
 
 ![Checkpoint #1](imgs/workshop-3.png "Checkpoint #1")
-- Deploy Gateway (Explain why you might want to do that)
-  - Need a tag in the k8s-operator called gateway just using discovery
+- [Deploy Spring Cloud Gateway Controller](#deploy-spring-cloud-gateway-controller)
   - Show basic Routing on K8s service discovery
   - You can hide and expose services based on business requirements, not yamls
   - Explain K8s security: ServiceAccount, Role & RoleBinding
@@ -88,7 +88,7 @@ This workshop follows the next checkpoints:
 ![Checkpoint #4](imgs/workshop-6.png "Checkpoint #4")
 
 
-# [Deploying Service A]
+# Deploying Service A
 You can clone [Example Service A](https://github.com/salaboy/example-service-a)
 
 This project contains the source code for a very simple service that do the following:
@@ -107,7 +107,9 @@ Create a docker image with:
 docker build -t salaboy/example-service-a:0.0.1 .
 ```
 
-Then push the image to docker hub (you need to replace to your user):
+
+Then push the docker image to be available in hub.docker.com, you will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+
 ```
 docker push salaboy/example-service-a:0.0.1
 ```
@@ -123,8 +125,9 @@ You can take a look at the logs by doing:
 kubectl logs -f my-service-a-<pod-hash> my-service-a
 ```
 
-You can find the pod name by calling ```kubectl get pods```
+You can find the pod name by ruunning ```kubectl get pods```
 
+## Exposing Service A
 Now in order to access our Example Service A service, we need to expose it to clients that are external to the Cluster. 
 We can do this with Native Ingress resources or by using the Istio Gateway that is available to us. 
 
@@ -135,23 +138,33 @@ kubectl apply -f istio-virtual-service.yaml
 ```
 This will create a new Route to access service a at http <EXTERNAL IP>/my-service-a/ 
 
-# [Deploying Service B]
+# Deploying Service B
 
-To deploy example service B follow the same instructions as Service A.
+To deploy example service B follow the same instructions as [Deploying Service A](#deploying-service-a) but in the example-service-b/ directory. 
 
-# [Deploying Function A]
-You can clone [Example Function A](https://github.com/salaboy/example-function-a)
+## Exposing Service B
+
+To expose example service B follow the same instructions as [Exposing Service A](#exposing-service-a) but in the example-service-b/ directory. 
+
+# Deploying Function A
+
+```
+cd example-function-a/
+```
 
 Build the project with 
 ```
-
 mvn clean install
 ```
+
 Create a Docker image for it with
+
 ```
 docker build -t salaboy/example-function-a:0.0.1 .
 ```
-Then push the docker image to be available in hub.docker.com
+
+Then push the docker image to be available in hub.docker.com, you will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+
 ```
 docker push salaboy/example-function-a:0.0.1
 ```
@@ -173,16 +186,30 @@ http <EXTERNAL IP> 'Host:example-function-a.default.example.com'
 
 You should see the function returning a value. 
 
-Notice that you can customize how the autoscaler scale down your function pods with: 
+
+> Notice that you can customize how the autoscaler scale down your function pods with: 
+> ```
+> kubectl edit cm config-autoscaler -n knative-serving
+>  ```
+> and changing the default value to:
+> ```
+> scale-to-zero-grace-period: "30s"
+> ```
+
+
+# Deploy Spring Cloud Gateway Controller
+
 ```
-kubectl edit cm config-autoscaler -n knative-serving
+cd k8s-operator/
+
 ```
-and changing the default value to:
+Let's switch to the controller branch
 ```
-scale-to-zero-grace-period: "30s"
+git checkout controller
 ```
 
-### Deploying our K8s Operator for Service A, B and Function A
+
+# Deploying our K8s Operator
 
 Build the project with 
 ```
