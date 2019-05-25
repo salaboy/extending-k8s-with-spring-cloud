@@ -48,11 +48,11 @@ This workshop follows the next checkpoints:
 
 ![Checkpoint #0](imgs/workshop-1.png "Checkpoint #0")
 
-- [Deploying Service A]
+- [Deploying Service A](#deploying-service-a)
   - See how the service A returns the default answer if B and Function A are not present
-- [Deploying Service B]
+- [Deploying Service B](#deploying-service-a)
   - See how A start consuming B
-- [Deploying Function A]
+- [Deploying Function A](#deploying-function-a)
   - See how Service A consume Function A
 
 ![Checkpoint #0](imgs/workshop-2.png "Checkpoint #0")
