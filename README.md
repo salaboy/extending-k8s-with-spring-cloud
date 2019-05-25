@@ -48,9 +48,9 @@ This workshop follows the next checkpoints:
 
 ![Checkpoint #0](imgs/workshop-1.png "Checkpoint #0")
 
-- [Deploying a Service A]
+- [Deploying Service A]
   - See how the service A returns the default answer if B and Function A are not present
-- [Deploying a Service B]
+- [Deploying Service B]
   - See how A start consuming B
 - [Deploying Function A]
   - See how Service A consume Function A
@@ -88,7 +88,7 @@ This workshop follows the next checkpoints:
 ![Checkpoint #4](imgs/workshop-6.png "Checkpoint #4")
 
 
-# [Deploying a Service A]
+# [Deploying Service A]
 You can clone [Example Service A](https://github.com/salaboy/example-service-a)
 
 This project contains the source code for a very simple service that do the following:
