@@ -14,13 +14,13 @@ We will use the following repositories to build our services and our Kubernetes 
 
 It is recommended to clone all these repos under the same directory, as the following instructions are based in that assumption:
 ```
-mkdir extending-k8s
-cd extending-k8s
-git clone https://github.com/salaboy/extending-k8s-with-spring-cloud
-git clone https://github.com/salaboy/k8s-operator
-git clone https://github.com/salaboy/example-service-a
-git clone https://github.com/salaboy/example-service-b
-git clone https://github.com/salaboy/example-function-a
+mkdir extending-k8s && \
+cd extending-k8s && \
+git clone https://github.com/salaboy/extending-k8s-with-spring-cloud && \
+git clone https://github.com/salaboy/k8s-operator && \
+git clone https://github.com/salaboy/example-service-a && \
+git clone https://github.com/salaboy/example-service-b && \
+git clone https://github.com/salaboy/example-function-a 
 ```
 
 ## Infrastructure
@@ -90,13 +90,18 @@ Now that we have our k8s services up and running we can expose them using Istio 
 
 
 # Deploying Service A
-You can clone [Example Service A](https://github.com/salaboy/example-service-a)
 
 This project contains the source code for a very simple service that do the following:
 - Every 10 seconds: call Service B (initial delay 5 seconds)
 - Every 10 seconds: call Function A
 
-It will print the output of each call or a message saying that the function or service were not available and it should return a default answer.
+It will print the output of each call or an error message if the services are unavailable.
+
+Let's build and deploy our Service A
+```
+cd example-service-a/
+```
+
 
 To deploy we need to:
 Build the project with maven:
@@ -205,12 +210,12 @@ Because we are creating an Controller/Operator that is going to access the Kuber
 
 Then inside the k8s-operator/kubernetes/ directory:
 
-``
-kubectl apply -f cluster-role.yaml
-kubectl apply -f cluster-role-binding.yaml 
+```
+kubectl apply -f cluster-role.yaml && \
+kubectl apply -f cluster-role-binding.yaml && \
 kubeclt apply -f service-account.yaml
 
-``
+```
 
 Once we have these resources configured, we can deploy our Operator, you can check that inside the deployment descriptor this Deployment is using the ServiceAccount that we have created before. 
 

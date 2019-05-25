@@ -11,7 +11,7 @@ In this section we will perform the next steps:
 
 I've created a 3 nodes cluster with a **n1-standard-2**  (2CPUs - 7.5GB RAM)setup for each node. I've selected Kubernetes version **1.12.6**  for the following installation. (Notice that with an older version, the one for default doesn't work)
 
-You create the cluster and the connect to it.
+You create the cluster and the connect to it (by going to http://console.cloud.google.com -> Kubernetes Engine -> Create a new Cluster and then Connect button on the cluster).
 
 Then to install Istio (in the istio-system namespace):
 ```
