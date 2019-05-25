@@ -36,13 +36,17 @@ kubectl get svc istio-ingressgateway -n istio-system
 ```
 
 ## Workshop
-**Steps Draft**
 
-
-
-
+This workshop follows the next checkpoints:
+- Checkpoint #0: Services A, B and Function A
+- Checkpoint #1: Controller v1 (Gateway/Routes)
+- Checkpoint #2: Controller v2 (Notify if Service B is missing)
+- Checkpoint #3: Operator v1 (CRDs and App)
+- Checkpoint #4: Operator v2 (+Checking K8s Services)
 
 ## Checkpoint #0: Services A, B and Function A
+
+![Checkpoint #0](imgs/workshop-1.png "Checkpoint #0")
 
 - Deploy Service A
   - See how the service A returns the default answer if B is not present
@@ -52,9 +56,12 @@ kubectl get svc istio-ingressgateway -n istio-system
   - Expose Service A with an Istio Virtual Service + Istio Gateway
 - Deploy Function A
   - See how Service A consume Function A
+![Checkpoint #0](imgs/workshop-2.png "Checkpoint #0")
+
 
 ## Checkpoint #1: Controller v1 (Gateway/Routes)
 
+![Checkpoint #1](imgs/workshop-3.png "Checkpoint #1")
 - Deploy Gateway (Explain why you might want to do that)
   - Need a tag in the k8s-operator called gateway just using discovery
   - Show basic Routing on K8s service discovery
@@ -65,14 +72,17 @@ kubectl get svc istio-ingressgateway -n istio-system
 - Show watch on Service B
 
 ## Checkpoint #3: Operator v1 (CRDs and App)
+![Checkpoint #3](imgs/workshop-4.png "Checkpoint #3")
 - Show CRDs, Explain Application Concept
   - Deploy CRDs
   - Use kubectl to get the resources
 
 ## Checkpoint #4: Operator v2 (+Checking K8s Services)
+![Checkpoint #4](imgs/workshop-5.png "Checkpoint #4")
 - Deploy version 2 of k8s-operator
   - show code that watch resources changes 
   - Show custom routes creator
+![Checkpoint #4](imgs/workshop-6.png "Checkpoint #4")
 
 ### Deploying a Service A
 You can clone [Example Service A](https://github.com/salaboy/example-service-a)
