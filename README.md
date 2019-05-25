@@ -65,25 +65,26 @@ Now that we have our k8s services up and running we can expose them using Istio 
 ## Checkpoint #1: Controller v1 (Gateway/Routes)
 
 ![Checkpoint #1](imgs/workshop-3.png "Checkpoint #1")
+- [Setting up RBAC for our Controller](#setting-up-rbac-for-our-controller): ServiceAccount, Role & RoleBinding
 - [Deploy Spring Cloud Gateway Controller](#deploy-spring-cloud-gateway-controller)
   - Show basic Routing on K8s service discovery
-  - You can hide and expose services based on business requirements, not yamls
-  - Explain K8s security: ServiceAccount, Role & RoleBinding
+
 
 ## Checkpoint #2: Controller v2 (Notify if a Service is missing)
 - [Register watch on K8s Services](#register-watch-on-service)
+- You can hide and expose services based on business requirements, not yamls
 
 ## Checkpoint #3: Operator v1 (CRDs and App)
 ![Checkpoint #3](imgs/workshop-4.png "Checkpoint #3")
-- Show CRDs, Explain Application Concept
-  - Deploy CRDs
+- [Our CRDs](#our-crds)
+  - Deploy CRDs: service-a, service-b and Application
   - Use kubectl to get the resources
 
 ## Checkpoint #4: Operator v2 (+Checking K8s Services)
 ![Checkpoint #4](imgs/workshop-5.png "Checkpoint #4")
 - Deploy version 2 of k8s-operator
   - show code that watch resources changes 
-  - Show custom routes creator
+  - Creating custom routes based on CRDs for Applications
 
 ![Checkpoint #4](imgs/workshop-6.png "Checkpoint #4")
 
@@ -202,17 +203,19 @@ You should see the function returning a value.
 # Setting up RBAC for our Controller
 Because we are creating an Controller/Operator that is going to access the Kubernetes APIs from inside the cluster (as a Pod) we need to create 3 important resources: Role, RoleBinding and ServiceAccount. 
 
-Then inside the kubernetes/ 
+Then inside the k8s-operator/kubernetes/ directory:
 
 ``
 kubectl apply -f cluster-role.yaml
 kubectl apply -f cluster-role-binding.yaml 
 kubeclt apply -f service-account.yaml
+
 ``
 
-Once we have these resources configured, we can deploy our Operator, you can check that inside the deployment descriptor this Deployment is using the ServiceAccount that we have just created. 
+Once we have these resources configured, we can deploy our Operator, you can check that inside the deployment descriptor this Deployment is using the ServiceAccount that we have created before. 
 
-**Note**: notice that I've created a Cluster wide Role and Role Binding, both extremely permissive. You might want to check the official documentation to configure these resources to be as restrictive as possible for your Operator to work. [ServiceAccounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/), [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) 
+> **Note**: notice that I've created a Cluster wide Role and Role Binding, both extremely permissive. You might want to check the official documentation to configure these resources to be as restrictive as possible for your Operator to work. [ServiceAccounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/), [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) 
+
 
 # Deploy Spring Cloud Gateway Controller
 
@@ -265,47 +268,12 @@ docker push salaboy/k8s-operator:controller2
 ```
 
 
-# Deploying our K8s Operator
+# Our CRDs
+As shown in the previous diagrams, we will be defining 3 custom CRDs. Service A, Service B and Application (which aggregates these two types of services).
 
-Let's switch to the **operator** branch
-```
-git checkout operator
-```
+You can find our Custom Resource Definition in extending-k8s-with-spring-cloud/crds/
 
-Build the project with 
-```
-mvn clean install
-```
-Create a Docker image for it with
-```
-docker build -t salaboy/k8s-operator:operator .
-```
-Then push the docker image to be available in hub.docker.com.
-> You will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
-
-```
-docker push salaboy/k8s-operator:operator
-```
-
-
-In order to deploy our K8s Operator we need to we can run:
-```
-kubectl apply -f deployment.yaml
-```
-
-If you take a look at the logs of the K8s Operator you will see that the pod is running, but it lacks the right resources to operate:
-```
-kubectl logs -f k8s-operator-<POD name> k8s-operator
-
-// you should see something like:
-> Custom CRDs required to work not found please check your installation!
-```
-
-This means that we need to provide the Operator the Custom Resource Definitions we need to deploy these resources to make them available to our Cluster. In the crds/ directory we will find two things:
-1) Custom Resource Definitions
-2) Custom Resource (instance) 
-
-We will first deploy the Custom Resource Definition
+We will first deploy the Custom Resource Definition for Service A
 
 ```
 cd extending-k8s-with-spring-cloud/crds/
@@ -367,6 +335,48 @@ should return:
 NAME     AGE
 my-app   47s
 ```
+
+# Deploying our K8s Operator
+
+Let's switch to the **operator** branch
+```
+git checkout operator
+```
+
+Build the project with 
+```
+mvn clean install
+```
+Create a Docker image for it with
+```
+docker build -t salaboy/k8s-operator:operator .
+```
+Then push the docker image to be available in hub.docker.com.
+> You will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+
+```
+docker push salaboy/k8s-operator:operator
+```
+
+
+In order to deploy our K8s Operator we need to we can run:
+```
+kubectl apply -f deployment.yaml
+```
+
+If you take a look at the logs of the K8s Operator you will see that the pod is running, but it lacks the right resources to operate:
+```
+kubectl logs -f k8s-operator-<POD name> k8s-operator
+
+// you should see something like:
+> Custom CRDs required to work not found please check your installation!
+```
+
+This means that we need to provide the Operator the Custom Resource Definitions we need to deploy these resources to make them available to our Cluster. In the crds/ directory we will find two things:
+1) Custom Resource Definitions
+2) Custom Resource (instance) 
+
+
 
 
 @TODO: when we deploy a new service A we can create a new virtual service to expose on the Istio Gateway.
