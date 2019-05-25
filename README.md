@@ -281,6 +281,17 @@ my-app   47s
 
 
 @TODO: when we deploy a new service A we can create a new virtual service to expose on the Istio Gateway.
+@TODO: add mock route for apps/my-app/ 
+@TODO: create a branch for ap4k in service A
+@TODO: create a branch for jvm-operator
+@TODO: create a branch for 
+        1) gateway with discovery client
+        2) adding CRDS and watches
+        3) adding Service Checks to k8s service types
+
+@TODO: add diagrams to this doc one for each step. 
+
+
 
 # Links
 
