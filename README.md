@@ -37,6 +37,13 @@ kubectl get svc istio-ingressgateway -n istio-system
 
 ## Workshop
 **Steps Draft**
+
+
+
+
+
+## Checkpoint #0: Services A, B and Function A
+
 - Deploy Service A
   - See how the service A returns the default answer if B is not present
   - Expose Service A with an Istio Virtual Service + Istio Gateway
@@ -45,27 +52,27 @@ kubectl get svc istio-ingressgateway -n istio-system
   - Expose Service A with an Istio Virtual Service + Istio Gateway
 - Deploy Function A
   - See how Service A consume Function A
+
+## Checkpoint #1: Controller v1 (Gateway/Routes)
+
 - Deploy Gateway (Explain why you might want to do that)
   - Need a tag in the k8s-operator called gateway just using discovery
   - Show basic Routing on K8s service discovery
   - You can hide and expose services based on business requirements, not yamls
   - Explain K8s security: ServiceAccount, Role & RoleBinding
+
+## Checkpoint #2: Controller v2 (Notify if Service B is missing)
+- Show watch on Service B
+
+## Checkpoint #3: Operator v1 (CRDs and App)
 - Show CRDs, Explain Application Concept
   - Deploy CRDs
   - Use kubectl to get the resources
+
+## Checkpoint #4: Operator v2 (+Checking K8s Services)
 - Deploy version 2 of k8s-operator
   - show code that watch resources changes 
   - Show custom routes creator
-
-## Checkpoint #0: Services A, B and Function A
-
-## Checkpoint #1: Controller v1 (Gateway/Routes)
-
-## Checkpoint #2: Controller v2 (Notify if Service B is missing)
-
-## Checkpoint #3: Operator v1 (CRDs and App)
-
-## Checkpoint #4: Operator v2 (+Checking K8s Services)
 
 ### Deploying a Service A
 You can clone [Example Service A](https://github.com/salaboy/example-service-a)
@@ -136,7 +143,7 @@ docker push salaboy/example-function-a:0.0.1
 ```
 Then inside the kubernetes/ directory you can deploy your Knative function to your cluster with
 ``
-kubectl apply -f service.yaml
+kubectl apply -f kservice.yaml
 ``
 
 You can find the external IP that you can use to call your function:
@@ -156,9 +163,9 @@ Notice that you can customize how the autoscaler scale down your function pods w
 ```
 kubectl edit cm config-autoscaler -n knative-serving
 ```
-and changing the default 30s value to:
+and changing the default value to:
 ```
-scale-to-zero-grace-period: "10s"
+scale-to-zero-grace-period: "30s"
 ```
 
 ### Deploying our K8s Operator for Service A, B and Function A
@@ -218,7 +225,7 @@ kubectl apply -f service-a-crd-definition.yaml
 
 This means that now we can do:
 ```
-kubectl get service-a
+kubectl get a
 ```
 Now we should get 
 ```
@@ -243,7 +250,7 @@ Once again, no resources found is ok.
 For the Operator to work, we need to create instance of these resources. We have a couple of instance definitions ready in the same directory, so let's do:
 
 ```
-kubectl apply -f service-a.yaml
+kubectl apply -f my-a.yaml
 ```
 This create a new instance of our Custom Resource Definition ServiceA.
 
@@ -254,12 +261,12 @@ kubectl get a
 Should return:
 ```
 NAME        AGE
-service-a   37s
+my-a   37s
 ```
 
 Let's do the same with an Application resource:
 ```
-k apply -f app.yaml
+k apply -f my-app.yaml
 ```
 
 Now doing: 

@@ -4,7 +4,7 @@ I've installed my environment in GKE where you can get a 300 USD free credit to 
 In this section we will perform the next steps:
 1) Create a Cluster
 2) Install Istio in the istio-system namespace
-3) Install KNative (Service, Build, Eventing)
+3) Install KNative (Service & Eventing)
 4) Create an Istio gateway to route inbound traffic (from outside the cluster to our services)
 
 #### Creating the Cluster
@@ -38,18 +38,7 @@ Watch to all the
 kubectl -n knative-serving get pods -w
 ```
 
-Once that is done, let's install KNative Build (in the knative-build namespace)
-```
-kubectl apply --filename https://github.com/knative/build/releases/download/v0.4.0/build.yaml
-```
-
-Watch with:
-
-```
-kubectl -n knative-build get pods -w
-```
-
-Finally let's install KNative Eventing (this will create two namespaces: knative-sources and knative-eventing)
+Once that's done let's install KNative Eventing (this will create two namespaces: knative-sources and knative-eventing)
 ```
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.4.0/release.yaml && \
 kubectl apply --filename https://github.com/knative/eventing-sources/releases/download/v0.4.0/release.yaml && \
