@@ -48,16 +48,18 @@ This workshop follows the next checkpoints:
 
 ![Checkpoint #0](imgs/workshop-1.png "Checkpoint #0")
 
-- Deploy Service A
-  - See how the service A returns the default answer if B is not present
-  - Expose Service A with an Istio Virtual Service + Istio Gateway
-- Deploy Service B
+- [Deploying a Service A]
+  - See how the service A returns the default answer if B and Function A are not present
+- [Deploying a Service B]
   - See how A start consuming B
-  - Expose Service A with an Istio Virtual Service + Istio Gateway
-- Deploy Function A
+- [Deploying Function A]
   - See how Service A consume Function A
+
 ![Checkpoint #0](imgs/workshop-2.png "Checkpoint #0")
 
+
+- Expose Service A with an Istio Virtual Service + Istio Gateway
+- Expose Service B with an Istio Virtual Service + Istio Gateway
 
 ## Checkpoint #1: Controller v1 (Gateway/Routes)
 
@@ -82,9 +84,11 @@ This workshop follows the next checkpoints:
 - Deploy version 2 of k8s-operator
   - show code that watch resources changes 
   - Show custom routes creator
+
 ![Checkpoint #4](imgs/workshop-6.png "Checkpoint #4")
 
-### Deploying a Service A
+
+# [Deploying a Service A]
 You can clone [Example Service A](https://github.com/salaboy/example-service-a)
 
 This project contains the source code for a very simple service that do the following:
@@ -131,11 +135,11 @@ kubectl apply -f istio-virtual-service.yaml
 ```
 This will create a new Route to access service a at http <EXTERNAL IP>/my-service-a/ 
 
-### Deploying a Service B
+# [Deploying Service B]
 
 To deploy example service B follow the same instructions as Service A.
 
-### Creating and Deploying a Function with KNative Serving
+# [Deploying Function A]
 You can clone [Example Function A](https://github.com/salaboy/example-function-a)
 
 Build the project with 
