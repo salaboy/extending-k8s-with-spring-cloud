@@ -213,7 +213,7 @@ Then inside the k8s-operator/kubernetes/ directory:
 ```
 kubectl apply -f cluster-role.yaml && \
 kubectl apply -f cluster-role-binding.yaml && \
-kubeclt apply -f service-account.yaml
+kubectl apply -f service-account.yaml
 
 ```
 
