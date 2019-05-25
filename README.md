@@ -70,8 +70,8 @@ Now that we have our k8s services up and running we can expose them using Istio 
   - You can hide and expose services based on business requirements, not yamls
   - Explain K8s security: ServiceAccount, Role & RoleBinding
 
-## Checkpoint #2: Controller v2 (Notify if Service B is missing)
-- Show watch on Service B
+## Checkpoint #2: Controller v2 (Notify if a Service is missing)
+- [Register watch on K8s Services](#register-watch-on-service)
 
 ## Checkpoint #3: Operator v1 (CRDs and App)
 ![Checkpoint #3](imgs/workshop-4.png "Checkpoint #3")
@@ -108,7 +108,8 @@ docker build -t salaboy/example-service-a:0.0.1 .
 ```
 
 
-Then push the docker image to be available in hub.docker.com, you will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+Then push the docker image to be available in hub.docker.com.
+> You will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
 
 ```
 docker push salaboy/example-service-a:0.0.1
@@ -163,7 +164,8 @@ Create a Docker image for it with
 docker build -t salaboy/example-function-a:0.0.1 .
 ```
 
-Then push the docker image to be available in hub.docker.com, you will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+Then push the docker image to be available in hub.docker.com.
+> You will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
 
 ```
 docker push salaboy/example-function-a:0.0.1
@@ -203,31 +205,78 @@ You should see the function returning a value.
 cd k8s-operator/
 
 ```
-Let's switch to the controller branch
+Let's switch to the **controller** branch
 ```
 git checkout controller
+```
+
+Build the project with 
+```
+mvn clean install
+```
+Create a Docker image for it with
+```
+docker build -t salaboy/k8s-operator:controller .
+```
+Then push the docker image to be available in hub.docker.com.
+> You will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+
+```
+docker push salaboy/k8s-operator:controller
+```
+
+# Register watch on service
+cd k8s-operator/
+
+```
+Let's switch to the **controller2** branch
+```
+git checkout controller2
+```
+
+Build the project with 
+```
+mvn clean install
+```
+Create a Docker image for it with
+```
+docker build -t salaboy/k8s-operator:controller2 .
+```
+Then push the docker image to be available in hub.docker.com.
+> You will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+
+```
+docker push salaboy/k8s-operator:controller2
 ```
 
 
 # Deploying our K8s Operator
 
+Let's switch to the **operator** branch
+```
+git checkout operator
+```
+
 Build the project with 
 ```
-cd k8s-operator/
 mvn clean install
 ```
 Create a Docker image for it with
 ```
-docker build -t salaboy/k8s-operator:0.0.1 .
+docker build -t salaboy/k8s-operator:operator .
 ```
-Then push the docker image to be available in hub.docker.com
+Then push the docker image to be available in hub.docker.com.
+> You will need a Docker Hub and replace **salaboy** with your user name. You might also need to do docker login before push.
+
 ```
-docker push salaboy/k8s-operator:0.0.1
+docker push salaboy/k8s-operator:operator
 ```
 
 Because we are creating an Operator that is going to access the Kubernetes APIs from inside the cluster (as a Pod) we need to create 3 important resources: Role, RoleBinding and ServiceAccount. 
 
 Then inside the kubernetes/ 
+
+@TODO: move up to the first controller section
 
 ``
 kubectl apply -f cluster-role.yaml
