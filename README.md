@@ -63,11 +63,16 @@ Now that we have our k8s services up and running we can expose them using Istio 
 - [Expose Service B with an Istio Virtual Service + Istio Gateway](#exposing-service-b)
 
 ## Checkpoint #1: Controller v1 (Gateway/Routes)
+While working with controllers/operators we will be basically implementing the Reconciler Pattern by following the next infinite loop:
+
+![Reconcile Loop](imgs/reconcile-loop.png "Reconcile Loop")
+
+In this case we will build K8s controller that understands about Services and create routes to forward traffic to different services based on the request path. We will achieve this, by using the Spring Cloud Gateway plus the Spring Cloud Kubernetes Discovery implementation.
 
 ![Checkpoint #1](imgs/workshop-3.png "Checkpoint #1")
 - [Setting up RBAC for our Controller](#setting-up-rbac-for-our-controller): ServiceAccount, Role & RoleBinding
 - [Deploy Spring Cloud Gateway Controller](#deploy-spring-cloud-gateway-controller)
-  - Show basic Routing on K8s service discovery
+  - Show basic Routing on K8s service discovery (/actuator/gateway/routes)
 
 
 ## Checkpoint #2: Controller v2 (Notify if a Service is missing)
@@ -79,12 +84,14 @@ Now that we have our k8s services up and running we can expose them using Istio 
 - [Our CRDs](#our-crds)
   - Deploy CRDs: service-a, service-b and Application
   - Use kubectl to get the resources
+  - Look at the operator's output
 
 ## Checkpoint #4: Operator v2 (+Checking K8s Services)
 ![Checkpoint #4](imgs/workshop-5.png "Checkpoint #4")
 - Deploy version 2 of k8s-operator
-  - show code that watch resources changes 
+  - Look at code that watch k8s resources changes 
   - Creating custom routes based on CRDs for Applications
+  - Expose apps based on application healthy checks
 
 ![Checkpoint #4](imgs/workshop-6.png "Checkpoint #4")
 
@@ -122,8 +129,8 @@ docker push salaboy/example-service-a:0.0.1
 ```
 Finally deploy to our kubernetes cluster with:
 ```
-cd kubernetes/
-kubectl apply -f deployment.yaml
+cd kubernetes/ && \
+kubectl apply -f deployment.yaml && \
 kubectl apply -f service.yaml
 ```
 You can take a look at the logs by doing:
@@ -254,7 +261,7 @@ docker push salaboy/k8s-operator:controller
 Finally deploy to our kubernetes cluster with:
 
 ```
-cd kubernetes && \ 
+cd kubernetes && \
 kubectl apply -f deployment.yaml && \
 kubectl apply -f service.yaml
 ```
@@ -295,7 +302,7 @@ docker push salaboy/k8s-operator:controller2
 Finally deploy to our kubernetes cluster with:
 
 ```
-cd kubernetes && \ 
+cd kubernetes && \
 kubectl apply -f deployment.yaml && \
 kubectl apply -f service.yaml
 ```
@@ -303,12 +310,12 @@ kubectl apply -f service.yaml
 # Our CRDs
 As shown in the previous diagrams, we will be defining 3 custom CRDs. Service A, Service B and Application (which aggregates these two types of services).
 
-You can find our Custom Resource Definition in extending-k8s-with-spring-cloud/crds/
+You can find our Custom Resource Definition in /extending-k8s-with-spring-cloud/crds/
 
 We will first deploy the Custom Resource Definition for Service A
 
 ```
-cd extending-k8s-with-spring-cloud/crds/
+cd extending-k8s-with-spring-cloud/crds/ && \
 kubectl apply -f service-a-crd-definition.yaml
 ```
 
@@ -320,10 +327,29 @@ Now we should get
 ```
 No resources found.
 ```
-
 Due we haven't created any instance of this new resource type. 
 
-Let's add the Application CRD now:
+We can now create a new ServiceA instance by creating a resource of type ServiceA:
+```
+kubectl apply -f my-a.yaml
+```
+Now we should be able to get the newly created ServiceA resource:
+
+```
+kubectl get a
+```
+Should return:
+```
+NAME   AGE
+my-a   4s
+```
+
+You can now repeat for the CRD ServiceB:  
+```
+kubectl apply -f service-a-crd-definition.yaml 
+```
+
+Let's add the Application CRD now, which will aggregate ServiceA and ServiceB resources into an Application:
 ```
 kubectl apply -f app-crd-definition.yaml
 ```
@@ -336,24 +362,7 @@ kubectl get apps
 
 Once again, no resources found is ok.
 
-For the Operator to work, we need to create instance of these resources. We have a couple of instance definitions ready in the same directory, so let's do:
-
-```
-kubectl apply -f my-a.yaml
-```
-This create a new instance of our Custom Resource Definition ServiceA.
-
-Now the following command should return a resource instance:
-```
-kubectl get a
-```
-Should return:
-```
-NAME        AGE
-my-a   37s
-```
-
-Let's do the same with an Application resource:
+Let's now the create  an Application resource:
 ```
 k apply -f my-app.yaml
 ```
@@ -367,6 +376,8 @@ should return:
 NAME     AGE
 my-app   47s
 ```
+
+We can now create new resources from the following Kinds: ServiceA, ServiceB and Application, but since nobody is using these resources nothing will happen. We need now an Operator that understand about these CRDs and manage their lifecycle. 
 
 # Deploying our K8s Operator
 
@@ -390,9 +401,9 @@ Then push the docker image to be available in hub.docker.com.
 docker push salaboy/k8s-operator:operator
 ```
 
-
 In order to deploy our K8s Operator we need to we can run:
 ```
+cd kubernetes && \
 kubectl apply -f deployment.yaml
 ```
 
@@ -408,6 +419,9 @@ This means that we need to provide the Operator the Custom Resource Definitions 
 1) Custom Resource Definitions
 2) Custom Resource (instance) 
 
+@TODO: review operator branch logs.. too messy... 
+
+Add Section for Operator V2
 
 
 
