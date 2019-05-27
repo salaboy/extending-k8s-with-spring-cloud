@@ -84,6 +84,8 @@ http <EXTERNAL-IP>/my-service-b/
 
 Controller v1 (Gateway/Routes)
 
+> "A controller actively monitor and mantains a set of Kubernetes resources in a desired state." - Kubernetes Patterns
+
 While working with controllers/operators we will be basically implementing the [Reconciler Pattern](https://www.oreilly.com/library/view/cloud-native-infrastructure/9781491984291/ch04.html) by following the next infinite loop:
 
 ![Reconcile Loop](imgs/reconcile-loop.png "Reconcile Loop")
@@ -106,6 +108,8 @@ In this checkpoint we have a controller that watch the K8s Service resources and
 ![Checkpoint #2](imgs/workshop-3.1.png "Checkpoint #2")
 
 ## Checkpoint 3
+
+> "An Operator is a Controller that uses CRDs to encapsulate operational knowledge for a specific application.." - Kubernetes Patterns
 
 Operator v1 (CRDs and App)
 
