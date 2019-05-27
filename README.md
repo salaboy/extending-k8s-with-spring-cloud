@@ -63,8 +63,8 @@ We will start by deploying a set of services into our K8s Cluster. Here we will 
 
 Now that we have our k8s services up and running we can expose them using Istio Gateway to access them from outside the cluster
 
-- [Expose Service A with an Istio Virtual Service + Istio Gateway](deploy-service-a.md))
-- [Expose Service B with an Istio Virtual Service + Istio Gateway](deploy-service-a.md))
+- [Expose Service A (with an Istio Virtual Service + Istio Gateway)](deploy-service-a.md)
+- [Expose Service B (with an Istio Virtual Service + Istio Gateway](deploy-service-a.md)
 
 > **NOTE**: Remember that you can always find the external IP of your Gateway by running:
 >```
@@ -84,7 +84,7 @@ http <EXTERNAL-IP>/my-service-b/
 
 Controller v1 (Gateway/Routes)
 
-While working with controllers/operators we will be basically implementing the Reconciler Pattern by following the next infinite loop:
+While working with controllers/operators we will be basically implementing the [Reconciler Pattern](https://www.oreilly.com/library/view/cloud-native-infrastructure/9781491984291/ch04.html) by following the next infinite loop:
 
 ![Reconcile Loop](imgs/reconcile-loop.png "Reconcile Loop")
 
@@ -99,6 +99,7 @@ In this case we will build K8s controller that understands about Services and cr
 ## Checkpoint 2
  
 Controller v2 (Notify if a Service is missing)
+In this checkpoint we have a controller that watch the K8s Service resources and as soon as one gets deleted just print a log message. 
 
 - [Register watch on K8s Services](deploy-controller2.md)
 - You can hide and expose services based on business requirements, not yamls
@@ -108,15 +109,18 @@ Controller v2 (Notify if a Service is missing)
 
 Operator v1 (CRDs and App)
 
+On this check point we create our CRDs and we will create an Operator that understand about these new resources and act on them. 
+
 ![Checkpoint #3](imgs/workshop-4.png "Checkpoint #3")
 - [Our CRDs](our-crds.md)
   - Deploy CRDs: service-a, service-b and Application
   - Use kubectl to get the resources
-  - Look at the operator's output
+  - Look at the operator's output, see how the status and URL of the application are provided when all the Services are present
 
 ## Checkpoint 4
 
 Operator v2 (+Checking K8s Services)
+On the second version of the Operator we link our CRDs ServiceA, ServiceB and Application to K8s native resources and we act accordingly depending on the changes. 
 
 ![Checkpoint #4](imgs/workshop-5.png "Checkpoint #4")
 - Deploy version 2 of k8s-operator
@@ -140,6 +144,7 @@ Operator v2 (+Checking K8s Services)
 - [JVM Operators](http://github.com/jvm-operators)
 - [AP4K](http://github.com/ap4k/ap4k)
 - [KIND](http://github.com/kubernetes-sigs/kind)
+
 
 # Conclusions
 
