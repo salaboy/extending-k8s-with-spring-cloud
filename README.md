@@ -38,13 +38,13 @@ For setting up the cluster in [GKE you can follow this guide](install.md)
 ## Workshop
 
 This workshop follows the next checkpoints:
-- Checkpoint #0: Services A, B and Function A
-- Checkpoint #1: Controller v1 (Gateway/Routes)
-- Checkpoint #2: Controller v2 (Notify if Service B is missing)
-- Checkpoint #3: Operator v1 (CRDs and App)
-- Checkpoint #4: Operator v2 (+Checking K8s Services)
+- [Checkpoint #0](#checkpoint-0): Services A, B and Function A
+- [Checkpoint #1](#checkpoint-1): Controller v1 (Gateway/Routes)
+- [Checkpoint #2](#checkpoint-2): Controller v2 (Notify if Service B is missing)
+- [Checkpoint #3](#checkpoint-3): Operator v1 (CRDs and App)
+- [Checkpoint #4](#checkpoint-4): Operator v2 (+Checking K8s Services)
 
-## Checkpoint #0: Services A, B and Function A
+## Checkpoint 0
 We will start by deploying a set of services into our K8s Cluster. Here we will use the Service and Deployment resource, which will cause Kubernetes to create some other resources such as ReplicaSet and Pods. 
 
 ![Checkpoint #0](imgs/workshop-1.png "Checkpoint #0")
@@ -60,8 +60,8 @@ We will start by deploying a set of services into our K8s Cluster. Here we will 
 
 Now that we have our k8s services up and running we can expose them using Istio Gateway to access them from outside the cluster
 
-- [Expose Service A with an Istio Virtual Service + Istio Gateway](#exposing-service-a)
-- [Expose Service B with an Istio Virtual Service + Istio Gateway](#exposing-service-b)
+- [Expose Service A with an Istio Virtual Service + Istio Gateway](deploy-service-a.md))
+- [Expose Service B with an Istio Virtual Service + Istio Gateway](deploy-service-a.md))
 
 > **NOTE**: Remember that you can always find the external IP of your Gateway by running:
 >```
@@ -77,7 +77,8 @@ and
 http <EXTERNAL-IP>/my-service-b/
 ```
 
-## Checkpoint #1: Controller v1 (Gateway/Routes)
+## Checkpoint 1
+Controller v1 (Gateway/Routes)
 While working with controllers/operators we will be basically implementing the Reconciler Pattern by following the next infinite loop:
 
 ![Reconcile Loop](imgs/reconcile-loop.png "Reconcile Loop")
@@ -85,25 +86,28 @@ While working with controllers/operators we will be basically implementing the R
 In this case we will build K8s controller that understands about Services and create routes to forward traffic to different services based on the request path. We will achieve this, by using the Spring Cloud Gateway plus the Spring Cloud Kubernetes Discovery implementation.
 
 ![Checkpoint #1](imgs/workshop-3.png "Checkpoint #1")
-- [Setting up RBAC for our Controller](#setting-up-rbac-for-our-controller): ServiceAccount, Role & RoleBinding
-- [Deploy Spring Cloud Gateway Controller](#deploy-spring-cloud-gateway-controller)
+- [Setting up RBAC for our Controller](rbac.md): ServiceAccount, Role & RoleBinding
+- [Deploy Spring Cloud Gateway Controller](deploy-controller.md)
   - Show basic Routing on K8s service discovery (/actuator/gateway/routes)
 
 
-## Checkpoint #2: Controller v2 (Notify if a Service is missing)
-
-- [Register watch on K8s Services](#register-watch-on-service)
+## Checkpoint 2
+ Controller v2 (Notify if a Service is missing)
+- [Register watch on K8s Services](deploy-controller2.md)
 - You can hide and expose services based on business requirements, not yamls
 ![Checkpoint #2](imgs/workshop-3.1.png "Checkpoint #2")
 
-## Checkpoint #3: Operator v1 (CRDs and App)
+## Checkpoint 3
+Operator v1 (CRDs and App)
+
 ![Checkpoint #3](imgs/workshop-4.png "Checkpoint #3")
-- [Our CRDs](#our-crds)
+- [Our CRDs](our-crds.md)
   - Deploy CRDs: service-a, service-b and Application
   - Use kubectl to get the resources
   - Look at the operator's output
 
-## Checkpoint #4: Operator v2 (+Checking K8s Services)
+## Checkpoint 4
+Operator v2 (+Checking K8s Services)
 ![Checkpoint #4](imgs/workshop-5.png "Checkpoint #4")
 - Deploy version 2 of k8s-operator
   - Look at code that watch k8s resources changes 
