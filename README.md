@@ -130,6 +130,22 @@ On the second version of the Operator we link our CRDs ServiceA, ServiceB and Ap
 
 ![Checkpoint #4](imgs/workshop-6.png "Checkpoint #4")
 
+# Links
+- [Spring Cloud Kubernetes](http://github.com/spring-cloud/spring-cloud-kubernetes/)
+  - The K8s-operator project is using Spring Cloud Kubernetes Discovery as well as the Spring Cloud Gateway
+- [JVM Operators](http://github.com/jvm-operators)
+  - WIP branch in k8s-operator -> question asked to the project -> https://github.com/jvm-operators/abstract-operator/issues/50
+- [AP4K](http://github.com/ap4k/ap4k)
+  - You can look at the 2 mins video from @iocanel [here](https://www.youtube.com/watch?v=XctRwTu4ma4)
+  - You can take a look at the ap4k branch of the example-service-a project.
+- [KIND](http://github.com/kubernetes-sigs/kind)
+
+# Conclusions
+
+These examples are just very simple examples of what can be done. Now that we are running with existing K8s extensions such as Istio, KNative, Tekton CD, Gloo, etc, we have the perfect opportunity to integrate and build more complex operators that really understand the infrastructure, can monitor and act to better integrate our domain specific resources. 
+
+Please feel free to create issues, ask questions or even send PRs if you want to collaborate to expand these examples. 
+
 
 # TODOs
 @TODO: when we deploy a new service A we can create a new virtual service to expose on the Istio Gateway.
@@ -137,15 +153,5 @@ On the second version of the Operator we link our CRDs ServiceA, ServiceB and Ap
 @TODO: create a branch for ap4k in service A
 @TODO: create a branch for jvm-operator
 @TODO: review operator2 branch logs.. cherry pick from operator branch
-
-
-# Links
-- [Spring Cloud Kubernetes](http://github.com/spring-cloud/spring-cloud-kubernetes/)
-- [JVM Operators](http://github.com/jvm-operators)
-- [AP4K](http://github.com/ap4k/ap4k)
-- [KIND](http://github.com/kubernetes-sigs/kind)
-
-
-# Conclusions
-
-Explain the posibilities with KNative, Istio and Kubernetes native resources
+@TODO: integrate with tekton pipelines
+@TODO: add KIND for testing the operator
