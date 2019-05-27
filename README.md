@@ -93,6 +93,7 @@ In this case we will build K8s controller that understands about Services and cr
 ## Checkpoint #2: Controller v2 (Notify if a Service is missing)
 - [Register watch on K8s Services](#register-watch-on-service)
 - You can hide and expose services based on business requirements, not yamls
+![Checkpoint #2](imgs/workshop-3.1.png "Checkpoint #2")
 
 ## Checkpoint #3: Operator v1 (CRDs and App)
 ![Checkpoint #3](imgs/workshop-4.png "Checkpoint #3")
