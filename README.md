@@ -1,7 +1,7 @@
 # Extending Kubernetes with Spring Cloud
 This repository serves as an index for a workshop like set of excersices about creating our custom resource definitions for Kubernetes using Spring Cloud components. 
 
-During these excersices, you will learn about how to create your custom extensions, deploy them and use them as part of a Kubernetes Operator that will understand the domain specific restrictions that needs to be applied to the infrastructure.
+During these exercises, you will learn about how to create your custom extensions, deploy them and use them as part of a Kubernetes Operator that will understand the domain specific restrictions that needs to be applied to the infrastructure.
 At the end you can find also some useful links to other related projects. 
 
 
@@ -30,10 +30,10 @@ For this tutorial we use Kubernetes, Istio and KNative to demonstrate what can b
 ### Installation
 For setting up the cluster in [GKE you can follow this guide](install.md)
 
-**NOTE**: Remember that you can always find the external IP of your Gateway by running:
-```
-kubectl get svc istio-ingressgateway -n istio-system
-```
+> **NOTE**: Remember that you can always find the external IP of your Gateway by running:
+>```
+>kubectl get svc istio-ingressgateway -n istio-system
+>```
 
 ## Workshop
 
@@ -45,6 +45,7 @@ This workshop follows the next checkpoints:
 - Checkpoint #4: Operator v2 (+Checking K8s Services)
 
 ## Checkpoint #0: Services A, B and Function A
+We will start by deploying a set of services into our K8s Cluster. Here we will use the Service and Deployment resource, which will cause Kubernetes to create some other resources such as ReplicaSet and Pods. 
 
 ![Checkpoint #0](imgs/workshop-1.png "Checkpoint #0")
 
@@ -61,6 +62,20 @@ Now that we have our k8s services up and running we can expose them using Istio 
 
 - [Expose Service A with an Istio Virtual Service + Istio Gateway](#exposing-service-a)
 - [Expose Service B with an Istio Virtual Service + Istio Gateway](#exposing-service-b)
+
+> **NOTE**: Remember that you can always find the external IP of your Gateway by running:
+>```
+>kubectl get svc istio-ingressgateway -n istio-system
+>```
+
+Now that we have exposed our services we can access them by creating a GET HTTP request to:
+```
+http <EXTERNAL-IP>/my-service-a/
+```
+and
+```
+http <EXTERNAL-IP>/my-service-b/
+```
 
 ## Checkpoint #1: Controller v1 (Gateway/Routes)
 While working with controllers/operators we will be basically implementing the Reconciler Pattern by following the next infinite loop:
@@ -419,27 +434,23 @@ This means that we need to provide the Operator the Custom Resource Definitions 
 1) Custom Resource Definitions
 2) Custom Resource (instance) 
 
-@TODO: review operator branch logs.. too messy... 
-
-Add Section for Operator V2
 
 
 
+
+# TODOs
 @TODO: when we deploy a new service A we can create a new virtual service to expose on the Istio Gateway.
 @TODO: add mock route for apps/my-app/ 
 @TODO: create a branch for ap4k in service A
 @TODO: create a branch for jvm-operator
-@TODO: create a branch for 
-        1) gateway with discovery client
-        2) adding CRDS and watches
-        3) adding Service Checks to k8s service types
-
-@TODO: add diagrams to this doc one for each step. 
-
+@TODO: review operator2 branch logs.. cherry pick from operator branch
 
 
 # Links
-
+[Spring Cloud Kubernetes](http://github.com/spring-cloud/spring-cloud-kubernetes/)
+[JVM Operators](http://github.com/jvm-operators)
+[AP4K](http://github.com/ap4k/ap4k)
+[KIND](http://github.com/kubernetes-sigs/kind)
 
 # Conclusions
 
