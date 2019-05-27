@@ -139,6 +139,9 @@ On the second version of the Operator we link our CRDs ServiceA, ServiceB and Ap
   - You can look at the 2 mins video from @iocanel [here](https://www.youtube.com/watch?v=XctRwTu4ma4)
   - You can take a look at the ap4k branch of the example-service-a project.
 - [KIND](http://github.com/kubernetes-sigs/kind)
+- GOLANG tools to compare
+  - [KubeBuilder](https://www.github.com/kubernetes-sigs/kubebuilder)
+  - [Operator SDK](https://github.com/operator-framework/operator-sdk)
 
 # Conclusions
 
