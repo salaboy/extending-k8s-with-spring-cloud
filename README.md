@@ -45,6 +45,9 @@ This workshop follows the next checkpoints:
 - [Checkpoint #4](#checkpoint-4): Operator v2 (+Checking K8s Services)
 
 ## Checkpoint 0
+
+Services A, B and Function A
+
 We will start by deploying a set of services into our K8s Cluster. Here we will use the Service and Deployment resource, which will cause Kubernetes to create some other resources such as ReplicaSet and Pods. 
 
 ![Checkpoint #0](imgs/workshop-1.png "Checkpoint #0")
@@ -78,7 +81,9 @@ http <EXTERNAL-IP>/my-service-b/
 ```
 
 ## Checkpoint 1
+
 Controller v1 (Gateway/Routes)
+
 While working with controllers/operators we will be basically implementing the Reconciler Pattern by following the next infinite loop:
 
 ![Reconcile Loop](imgs/reconcile-loop.png "Reconcile Loop")
@@ -92,12 +97,15 @@ In this case we will build K8s controller that understands about Services and cr
 
 
 ## Checkpoint 2
- Controller v2 (Notify if a Service is missing)
+ 
+Controller v2 (Notify if a Service is missing)
+
 - [Register watch on K8s Services](deploy-controller2.md)
 - You can hide and expose services based on business requirements, not yamls
 ![Checkpoint #2](imgs/workshop-3.1.png "Checkpoint #2")
 
 ## Checkpoint 3
+
 Operator v1 (CRDs and App)
 
 ![Checkpoint #3](imgs/workshop-4.png "Checkpoint #3")
@@ -107,7 +115,9 @@ Operator v1 (CRDs and App)
   - Look at the operator's output
 
 ## Checkpoint 4
+
 Operator v2 (+Checking K8s Services)
+
 ![Checkpoint #4](imgs/workshop-5.png "Checkpoint #4")
 - Deploy version 2 of k8s-operator
   - Look at code that watch k8s resources changes 
@@ -126,10 +136,10 @@ Operator v2 (+Checking K8s Services)
 
 
 # Links
-[Spring Cloud Kubernetes](http://github.com/spring-cloud/spring-cloud-kubernetes/)
-[JVM Operators](http://github.com/jvm-operators)
-[AP4K](http://github.com/ap4k/ap4k)
-[KIND](http://github.com/kubernetes-sigs/kind)
+- [Spring Cloud Kubernetes](http://github.com/spring-cloud/spring-cloud-kubernetes/)
+- [JVM Operators](http://github.com/jvm-operators)
+- [AP4K](http://github.com/ap4k/ap4k)
+- [KIND](http://github.com/kubernetes-sigs/kind)
 
 # Conclusions
 
