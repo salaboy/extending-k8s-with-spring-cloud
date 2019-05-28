@@ -84,7 +84,7 @@ http <EXTERNAL-IP>/my-service-b/
 
 Controller v1 (Gateway/Routes)
 
-> "A controller actively monitor and mantains a set of Kubernetes resources in a desired state." - Kubernetes Patterns
+> "A controller actively monitor and maintains a set of Kubernetes resources in a desired state." - Kubernetes Patterns
 
 While working with controllers/operators we will be basically implementing the [Reconciler Pattern](https://www.oreilly.com/library/view/cloud-native-infrastructure/9781491984291/ch04.html) by following the next infinite loop:
 
