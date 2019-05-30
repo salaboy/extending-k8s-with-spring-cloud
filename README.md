@@ -153,12 +153,3 @@ These examples are just very simple examples of what can be done. Now that we ar
 
 Please feel free to create issues, ask questions or even send PRs if you want to collaborate to expand these examples. 
 
-
-# TODOs
-@TODO: when we deploy a new service A we can create a new virtual service to expose on the Istio Gateway.
-@TODO: add mock route for apps/my-app/ 
-@TODO: create a branch for ap4k in service A
-@TODO: create a branch for jvm-operator
-@TODO: review operator2 branch logs.. cherry pick from operator branch
-@TODO: integrate with tekton pipelines
-@TODO: add KIND for testing the operator
